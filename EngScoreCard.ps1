@@ -41,13 +41,13 @@ $wiql_approachSLA_StaleReliability = "SELECT [System.Id],[System.WorkItemType],[
 
 $wiql_EngineeringScoreCard = [ordered]@{
     # 'Stale LSI repair items' = [ScoreCardQuery]::new($wiql_StaleLSIrepairWorkItems, $wiql_approachSLA_StaleLSIrepair, 0)
-    'Stale DTSs'             = [ScoreCardQuery]::new($wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0)  
+    'Stale DTSs'               = [ScoreCardQuery]::new($wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0)  
     # 'Active P0 bugs'         = [ScoreCardQuery]::new($wiql_ActiveP0Bugs, $null, 0)
-    'Stale P1 Bugs'          = [ScoreCardQuery]::new($wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
+    # 'Stale P1 Bugs'            = [ScoreCardQuery]::new($wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
     # 'Bugs Per Engineer'      = [ScoreCardQuery]::new($wiql_BugsPerEngineer, $null, 5)
     # 'Stale security items'     = [ScoreCardQuery]::new($wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
     'Stale accessibility bugs' = [ScoreCardQuery]::new($wiql_StaleAccessibilityBugs, $null, 0)
-    'Stale reliability items'  = [ScoreCardQuery]::new($wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
+    # 'Stale reliability items'  = [ScoreCardQuery]::new($wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
 }
 
 
@@ -121,6 +121,7 @@ foreach ($teamName in $areapath_engScoreCard.keys) {
     [void]$sb.AppendLine( "</table>" );
     [void]$sb.AppendLine( "</body></html>" );
     $sb.ToString()
+    echo "::set-output name=scorecard::true"
 }
 
 
