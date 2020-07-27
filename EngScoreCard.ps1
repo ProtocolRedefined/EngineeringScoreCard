@@ -98,7 +98,7 @@ foreach ($teamName in $teams.Keys) {
 }
 
 
-$resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10 -Encoding UTF8
+$resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10 
 $resultJson
 
 class ScoreCardQuery {
