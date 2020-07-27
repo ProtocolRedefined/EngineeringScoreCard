@@ -22,3 +22,7 @@ jobs:
         shell: powershell
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
+
+      - name: Check outputs
+        shell: powershell
+        run: echo ${{ steps.vars.outputs.scorecard }}
