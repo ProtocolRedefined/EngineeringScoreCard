@@ -15,5 +15,5 @@ jobs:
             az extension add --name azure-devops
             az devops -h
             az repos list --org https://dev.azure.com/gsaralprivate
-          env:
-            AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANIPRIVATEPAT }}
+        env:
+          AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
