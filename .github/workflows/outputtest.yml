@@ -28,5 +28,4 @@ jobs:
 
       - name: Check outputs
         id: checkoutput
-        shell: powershell
         run: echo ${{ steps.psscript.outputs.res }}
