@@ -22,8 +22,8 @@ jobs:
         run: $result = &".\TestOutput.ps1"
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
-          SCRIPT_OUTPUT: ""
+          SCRIPT_OUTPUT: "hello"
 
       - name: Check outputs
         shell: powershell
-        run: $result
+        run: echo $SCRIPT_OUTPUT
