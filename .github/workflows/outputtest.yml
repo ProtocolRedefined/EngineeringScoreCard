@@ -1,4 +1,4 @@
-on: [issues]
+on: [push]
 
 name: EngineeringScoreCard
 
@@ -18,7 +18,11 @@ jobs:
         run: echo Hello, world!
 
       - name: Azure CLI Action
-        run: .\EngScoreCard.ps1
+        run: $result = &".\TestOutput.ps1"
         shell: powershell
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
+
+      - name: Check outputs
+        shell: powershell
+        run: Write-Output ${{ steps.vars.outputs.scorecard }}
