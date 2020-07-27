@@ -41,7 +41,7 @@ $wiql_approachSLA_StaleReliability = "SELECT [System.Id],[System.WorkItemType],[
 
 $wiql_EngineeringScoreCard = [ordered]@{
     # 'Stale LSI repair items' = [ScoreCardQuery]::new($wiql_StaleLSIrepairWorkItems, $wiql_approachSLA_StaleLSIrepair, 0)
-    # 'Stale DTSs'               = [ScoreCardQuery]::new($wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0)  
+    'Stale DTSs'               = [ScoreCardQuery]::new($wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0) 
     # 'Active P0 bugs'         = [ScoreCardQuery]::new($wiql_ActiveP0Bugs, $null, 0)
     # 'Stale P1 Bugs'            = [ScoreCardQuery]::new($wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
     # 'Bugs Per Engineer'      = [ScoreCardQuery]::new($wiql_BugsPerEngineer, $null, 5)
@@ -56,8 +56,8 @@ $teams = [ordered]@{
     #'Search Core' = [TeamDetails]::new("Search core", 15, "AzureDevOps\VSTS\RM and Deployment\RM-Service")
     # 'Search Core' = [TeamDetails]::new("Search core", 15, "AzureDevOps\VSTS\Modern Interactions and Search\Search Core")
     # 'ProTocol' = [TeamDetails]::new("ProToCol", 12, "AzureDevOps\VSTS\Modern Interactions\ProToCol")  
-    # 'Boards' = [TeamDetails]::new("Boards", 6, "AzureDevOps\VSTS\Apps\Boards")  
-    'Pipelines Application and Web Platform' = [TeamDetails]::new("Boards", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
+    # 'Boards'                                 = [TeamDetails]::new("Boards", 6, "AzureDevOps\VSTS\Apps\Boards")  
+    'Pipelines Application and Web Platform' = [TeamDetails]::new("Pipelines Application and Web Platform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
     
 }
 
@@ -75,60 +75,38 @@ foreach ($teamName in $teams.Keys) {
         $witCount, $wits = GetWorkItems $organization $finalQuery
         # Write-Host "output $($scoreCardAttributes)   $($witCount)       $($scoreCardAttr.threshold)"
 
+        $scoreCardQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($finalQuery))
+        
         if ($scoreCardAttr.wiqlQueryApproachSLA -ne "") {
             $approachSLA_finalQuery = [string]::Format($scoreCardAttr.wiqlQueryApproachSLA, $areapath)
             $approachSLA_witCount, $approachSLA_wits = GetWorkItems $organization $approachSLA_finalQuery
+            
+            $approachQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($approachSLA_finalQuery))
         }
         else {
             $approachSLA_finalQuery = ""
             $approachSLA_witCount = 0
             $approachSLA_wits = $null
+            $approachQueryUrl = ""
         }
         [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
+        $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
+        $queryOutput.setApproachQueryUrl($approachQueryUrl);
         $teamScoreOutput.AddScoreCardQueryOutput($scoreCardAttributes, $queryOutput)
     }
     $areapath_engScoreCard.Add($teamName, $teamScoreOutput)
 }
 
 
-    
-foreach ($teamName in $areapath_engScoreCard.keys) {
-    $sb = [System.Text.StringBuilder]::new()
-    [void]$sb.AppendLine( "<html><head><style>table { border-collapse: collapse; } table, th, td {border: 1px solid black; font-family:verdana;font-size:12;}</style></head><body  style=`"font-family:verdana;font-size:11`">" )
-    
-    [void]$sb.AppendLine( "<table><tr><th align='left' colspan='4'>$teamName</th></tr>" )
-
-    $engScoreCard = $areapath_engScoreCard[$teamName]
-    $outputs = $engScoreCard.scoreCardOutputs
-
-    foreach ($key in $outputs.keys) {
-        [ScoreCardQueryOutput]$queryOutput = $outputs[$key]
-        #  Write-Host "output $($key)   $($queryOutput.count)       $($queryOutput.threshold)"
-
-        $scoreCardQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($queryOutput.wiqlQuery))
-
-        $approachQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($queryOutput.wiqlQueryApproachSLA))
-
-        $approachSLAText = [System.Text.StringBuilder]::new()
-        if ($queryOutput.approachSLACount -gt 0) {
-            [void]$approachSLAText.AppendLine( "<br>" )
-            [void]$approachSLAText.AppendLine( "<a href=$approachQueryUrl>$($queryOutput.approachSLACount) more items due before sprint end</a>" )
-        }
-
-        $scoreColor = $(if ($queryOutput.count -gt $queryOutput.threshold) { 'red' } else { 'black' } )
-        [void]$sb.AppendLine( "<tr><td align='center' width='25px' height='50px'><a href=$scoreCardQueryUrl>$($queryOutput.count)</a></td><td><font color=$($scoreColor)>$key</font>$($approachSLAText.ToString())</td><td></td><td></td></tr>" )
-    }
-    [void]$sb.AppendLine( "</table>" );
-    [void]$sb.AppendLine( "</body></html>" );
-    $sb.ToString()
-}
-
-
+$resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10
+$resultJson
 
 class ScoreCardQuery {
     [string]$wiqlQuery
     [string]$wiqlQueryApproachSLA
     [int]$threshold
+    [string]$scoreCardQueryUrl
+    [string]$approachQueryUrl
  
     ScoreCardQuery(
         [string]$wiqlQuery,
@@ -138,6 +116,14 @@ class ScoreCardQuery {
         $this.wiqlQuery = $wiqlQuery
         $this.wiqlQueryApproachSLA = $wiqlQueryApproachSLA
         $this.threshold = $threshold
+    }
+
+    [void] setScoreCardQueryUrl([string]$scoreCardQueryUrl) {
+        $this.scoreCardQueryUrl = $scoreCardQueryUrl
+    }
+
+    [void] setApproachQueryUrl([string]$approachQueryUrl) {
+        $this.approachQueryUrl = $approachQueryUrl
     }
 }
 
