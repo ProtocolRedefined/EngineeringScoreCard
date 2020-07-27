@@ -19,11 +19,12 @@ jobs:
 
       - name: Azure CLI Action
         shell: powershell
-        run: $result = &".\TestOutput.ps1"
+        run: |
+        $result = &".\TestOutput.ps1"
+        echo "::set-output name=res::$result"
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
-          SCRIPT_OUTPUT: "hello"
 
       - name: Check outputs
         shell: powershell
-        run: echo $SCRIPT_OUTPUT
+        run: echo ${{ steps.vars.outputs.res }}
