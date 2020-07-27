@@ -12,4 +12,4 @@ jobs:
           azcliversion: 2.0.72
           inlineScript: |
             az -h
-            az extension add azure-devops
+            az extension add --name azure-devops
