@@ -25,4 +25,4 @@ jobs:
 
       - name: Check outputs
         shell: powershell
-        run: echo ${{ steps.vars.outputs.scorecard }}
+        run: Write-Output ${{ steps.vars.outputs.scorecard }}
