@@ -5,7 +5,7 @@ $project = "AzureDevOps"
 
 function UrlEncode ([string]$witQuery) {
     
-    [string]$encodedUrl = [System.Web.HttpUtility]::UrlEncode($witQuery)
+    [string]$encodedUrl = [System.Web.HttpUtility]::UrlEncode($witQuery, [System.Text.Encoding]::UTF8)
     # Write-Host "encoded url : $($encodedurl)"
     return $encodedUrl
 }
