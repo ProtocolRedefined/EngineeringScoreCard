@@ -121,7 +121,6 @@ foreach ($teamName in $areapath_engScoreCard.keys) {
     [void]$sb.AppendLine( "</table>" );
     [void]$sb.AppendLine( "</body></html>" );
     $sb.ToString()
-    echo "::set-output name=scorecard::true"
 }
 
 
