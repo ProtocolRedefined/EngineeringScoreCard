@@ -1,4 +1,4 @@
-on: [push, issues]
+on: [issues]
 
 name: EngineeringScoreCard
 
