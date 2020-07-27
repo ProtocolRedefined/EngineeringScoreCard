@@ -66,7 +66,7 @@ $areapath_engScoreCard = New-Object 'system.collections.generic.dictionary[[stri
 foreach ($teamName in $teams.Keys) {
     $team = $teams[$teamName]
     $areapath = $team.areapath
-    Write-Host "team $($areapath)     Head Count $($team.headCount)"
+    # Write-Host "team $($areapath)     Head Count $($team.headCount)"
     [TeamScoreCardOutput]$teamScoreOutput = [TeamScoreCardOutput]::new($teamName, $team)
 
     foreach ($scoreCardAttributes in $wiql_EngineeringScoreCard.Keys) { 
@@ -75,13 +75,13 @@ foreach ($teamName in $teams.Keys) {
         $witCount, $wits = GetWorkItems $organization $finalQuery
         # Write-Host "output $($scoreCardAttributes)   $($witCount)       $($scoreCardAttr.threshold)"
 
-        $scoreCardQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($finalQuery))
+        # $scoreCardQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($finalQuery))
         
         if ($scoreCardAttr.wiqlQueryApproachSLA -ne "") {
             $approachSLA_finalQuery = [string]::Format($scoreCardAttr.wiqlQueryApproachSLA, $areapath)
             $approachSLA_witCount, $approachSLA_wits = GetWorkItems $organization $approachSLA_finalQuery
             
-            $approachQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($approachSLA_finalQuery))
+            # $approachQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($approachSLA_finalQuery))
         }
         else {
             $approachSLA_finalQuery = ""
