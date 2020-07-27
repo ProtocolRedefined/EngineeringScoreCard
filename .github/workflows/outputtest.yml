@@ -24,4 +24,4 @@ jobs:
 
       - name: Check outputs
         id: checkoutput
-        run: echo ${{ steps.psscript.outputs.res }}
+        run: echo "${{ steps.psscript.outputs.res }}"
