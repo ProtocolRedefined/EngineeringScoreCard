@@ -75,23 +75,23 @@ foreach ($teamName in $teams.Keys) {
         $witCount, $wits = GetWorkItems $organization $finalQuery
         # Write-Host "output $($scoreCardAttributes)   $($witCount)       $($scoreCardAttr.threshold)"
 
-        # $scoreCardQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($finalQuery))
+        $scoreCardQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($finalQuery))
         
         if ($scoreCardAttr.wiqlQueryApproachSLA -ne "") {
             $approachSLA_finalQuery = [string]::Format($scoreCardAttr.wiqlQueryApproachSLA, $areapath)
             $approachSLA_witCount, $approachSLA_wits = GetWorkItems $organization $approachSLA_finalQuery
             
-            # $approachQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($approachSLA_finalQuery))
+            $approachQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($approachSLA_finalQuery))
         }
         else {
             $approachSLA_finalQuery = ""
             $approachSLA_witCount = 0
             $approachSLA_wits = $null
-            # $approachQueryUrl = ""
+            $approachQueryUrl = ""
         }
         [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
-        # $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
-        # $queryOutput.setApproachQueryUrl($approachQueryUrl);
+        $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
+        $queryOutput.setApproachQueryUrl($approachQueryUrl);
         $teamScoreOutput.AddScoreCardQueryOutput($scoreCardAttributes, $queryOutput)
     }
     $areapath_engScoreCard.Add($teamName, $teamScoreOutput)
@@ -105,8 +105,8 @@ class ScoreCardQuery {
     [string]$wiqlQuery
     [string]$wiqlQueryApproachSLA
     [int]$threshold
-    # [string]$scoreCardQueryUrl
-    # [string]$approachQueryUrl
+    [string]$scoreCardQueryUrl
+    [string]$approachQueryUrl
  
     ScoreCardQuery(
         [string]$wiqlQuery,
@@ -118,13 +118,13 @@ class ScoreCardQuery {
         $this.threshold = $threshold
     }
 
-    # [void] setScoreCardQueryUrl([string]$scoreCardQueryUrl) {
-    #     $this.scoreCardQueryUrl = $scoreCardQueryUrl
-    # }
+    [void] setScoreCardQueryUrl([string]$scoreCardQueryUrl) {
+        $this.scoreCardQueryUrl = $scoreCardQueryUrl
+    }
 
-    # [void] setApproachQueryUrl([string]$approachQueryUrl) {
-    #     $this.approachQueryUrl = $approachQueryUrl
-    # }
+    [void] setApproachQueryUrl([string]$approachQueryUrl) {
+        $this.approachQueryUrl = $approachQueryUrl
+    }
 }
 
 class ScoreCardQueryOutput : ScoreCardQuery {
