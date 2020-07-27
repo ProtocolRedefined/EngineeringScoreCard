@@ -25,4 +25,4 @@ jobs:
 
       - name: Check outputs
         shell: powershell
-        run: echo $result
+        run: $result
