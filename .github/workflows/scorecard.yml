@@ -13,3 +13,5 @@ jobs:
           inlineScript: |
             az -h
             az extension add --name azure-devops
+            az devops -h
+            az repos list
