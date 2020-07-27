@@ -11,5 +11,4 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            az account show
-            az storage -h
+            az -h
