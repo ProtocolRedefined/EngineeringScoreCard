@@ -21,7 +21,7 @@ jobs:
         shell: powershell
         run: |
           $result = &".\TestOutput.ps1"
-          echo "::set-output name=res::$result"
+          echo ::set-output name=res::$result
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
 
