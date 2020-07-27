@@ -22,10 +22,10 @@ jobs:
         shell: powershell
         run: |
           $result = &".\EngScoreCard.ps1"
-          echo "::set-output name=res::$teamscorecard"
+          echo "::set-output name=scorecard::$result"
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
 
       - name: Check outputs
         id: checkoutput
-        run: echo "${{ steps.psscript.outputs.teamscorecard }}"
+        run: echo "${{ steps.psscript.outputs.scorecard }}"
