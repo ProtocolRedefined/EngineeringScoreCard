@@ -18,6 +18,7 @@ jobs:
         run: echo Hello, world!
 
       - name: Azure CLI Action
+        id: psscript
         shell: powershell
         run: |
           $result = &".\TestOutput.ps1"
@@ -26,5 +27,6 @@ jobs:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
 
       - name: Check outputs
+        id: checkoutput
         shell: powershell
-        run: echo ${{ steps.vars.outputs.res }}
+        run: echo ${{ steps.psscript.outputs.res }}
