@@ -90,8 +90,8 @@ foreach ($teamName in $teams.Keys) {
             $approachQueryUrl = ""
         }
         [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
-        $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
-        $queryOutput.setApproachQueryUrl($approachQueryUrl);
+        # $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
+        # $queryOutput.setApproachQueryUrl($approachQueryUrl);
         $teamScoreOutput.AddScoreCardQueryOutput($scoreCardAttributes, $queryOutput)
     }
     $areapath_engScoreCard.Add($teamName, $teamScoreOutput)
