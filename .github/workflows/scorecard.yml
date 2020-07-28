@@ -1,19 +1,38 @@
-on: [issues]
+on: [push]
 
 name: EngineeringScoreCard
 
 jobs:
-  build-and-deploy:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
     runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Azure CLI script
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.0.72
-          inlineScript: |
-            az -h
-            az extension add --name azure-devops
-            az devops -h
-            az devops project list --org https://dev.azure.com/mseng
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Azure CLI Action
+        id: psscript
+        shell: powershell
+        run: |
+          $result = &".\EngScoreCard.ps1"
+          echo "::set-output name=scorecard::$result"
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
+
+      - name: Check outputs
+        id: checkoutput
+        shell: powershell
+        run: |
+          echo '${{ steps.psscript.outputs.scorecard}}'
+
+      - name: Push Notification
+        uses: ProtocolRedefined/Ecosystem@v1
+        with:
+          repoName: ProtocolRedefined/Ecosystem-Template-Repository
+          data: '{ "message" : "${{ steps.psscript.outputs.scorecard }}" }'
+          templateType: HandleBars
+          sourceType: ScoreCard
+          ClientType: Teams
