@@ -26,3 +26,13 @@ jobs:
         id: checkoutput
         shell: powershell
         run: echo "${{ steps.psscript.outputs.scorecard }}"
+
+      - name: Push Notification
+        uses: ProtocolRedefined/Ecosystem@v1
+        with:
+          repoName: ProtocolRedefined/Ecosystem-Template-Repository
+          branchName: showcase
+          data: '{ "message": "score card ${{ steps.psscript.outputs.scorecard }}" }'
+          templateType: HandleBars
+          sourceType: PublishReport
+          ClientType: Teams
