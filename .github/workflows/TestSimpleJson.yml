@@ -1,6 +1,6 @@
-on: [issues]
+on: [push]
 
-name: EngineeringScoreCard
+name: SimpleJson
 
 jobs:
   # This workflow contains a single job called "build"
@@ -17,10 +17,8 @@ jobs:
         id: psscript
         shell: powershell
         run: |
-          $result = &".\EngScoreCard.ps1"
+          $result = &".\TestSimpleJson.ps1"
           echo "::set-output name=scorecard::$result"
-        env:
-          AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
 
       - name: Check outputs
         id: checkoutput
