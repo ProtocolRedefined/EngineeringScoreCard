@@ -1,2 +1,2 @@
 [string]$resultOutput = '{"openIssues":"abc"}';
-Write-Output -InputObject $resultOutput 
+Write-Output -InputObject $resultOutput
