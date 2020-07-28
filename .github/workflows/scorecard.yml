@@ -17,7 +17,7 @@ jobs:
         id: psscript
         shell: powershell
         run: |
-          $result = &".\EngScoreCard.ps1 -teamName Boards -headCount 6 -areaPath AzureDevOps\VSTS\Apps\Boards"
+          .\EngScoreCard.ps1 -teamName Boards -headCount 6 -areaPath AzureDevOps\VSTS\Apps\Boards
           echo "::set-output name=scorecard::$result"
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
