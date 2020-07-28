@@ -4,7 +4,7 @@ $project = "AzureDevOps"
 
 
 function UrlEncode ([string]$witQuery) {
-    
+    # Write-Host "witQuery : $($witQuery)"
     [string]$encodedUrl = [System.Web.HttpUtility]::UrlEncode($witQuery, [System.Text.Encoding]::UTF8)
     # Write-Host "encoded url : $($encodedurl)"
     return $encodedUrl
@@ -99,16 +99,15 @@ foreach ($teamName in $teams.Keys) {
 
 
 $resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10 -compress
-$resultJson 
-# $resultJson = $resultJson -replace '"', "'"
-# $resultJson = $resultJson -replace '"', '\"'
+# $resultJson = $resultJson -replace '\\', '\'
 # $resultJson
 
-# $singleLineJson = $resultJson -split "(\r*\n){2,}"
+$singleLineJson = $resultJson -split "(\r*\n){2,}"
 
 # remove linefeeds for each section and output the contents
-# $singleLineJson = $singleLineJson -replace '\r*\n', ''
-# $singleLineJson
+$singleLineJson = $singleLineJson -replace '\r*\n', ''
+$singleLineJson = $singleLineJson -replace '\\\\', '\'
+$singleLineJson
 
 class ScoreCardQuery {
     [string]$wiqlQuery
