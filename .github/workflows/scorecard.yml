@@ -18,7 +18,7 @@ jobs:
         shell: powershell
         run: |
           $result = &".\EngScoreCard.ps1"
-          echo "::set-output name=scorecard::$result"
+          echo "::set-output name=scorecard::'$result'"
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
 
@@ -32,7 +32,7 @@ jobs:
         uses: ProtocolRedefined/Ecosystem@master
         with:
           repoName: ProtocolRedefined/Ecosystem-Template-Repository
-          data: ${{ fromJson(steps.psscript.outputs.scorecard) }}
+          data: ${{ steps.psscript.outputs.scorecard }}
           templateType: HandleBars
           sourceType: ScoreCard
           ClientType: Teams
