@@ -39,14 +39,14 @@ $wiql_approachSLA_StaleReliability = "SELECT [System.Id],[System.WorkItemType],[
 
 
 $wiql_EngineeringScoreCard = [ordered]@{
-    # 'Stale LSI repair items' = [ScoreCardQuery]::new($wiql_StaleLSIrepairWorkItems, $wiql_approachSLA_StaleLSIrepair, 0)
-    # 'Stale DTSs'               = [ScoreCardQuery]::new($wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0) 
-    # 'Active P0 bugs'         = [ScoreCardQuery]::new($wiql_ActiveP0Bugs, $null, 0)
-    # 'Stale P1 Bugs'            = [ScoreCardQuery]::new($wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
-    # 'Bugs Per Engineer'      = [ScoreCardQuery]::new($wiql_BugsPerEngineer, $null, 5)
-    # 'Stale security items'     = [ScoreCardQuery]::new($wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
-    'Staleaccessibilitybugs' = [ScoreCardQuery]::new($wiql_StaleAccessibilityBugs, $null, 0)
-    # 'Stale reliability items'  = [ScoreCardQuery]::new($wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
+    # 'Stale LSI repair items' = [ScoreCardQuery]::new('Stale LSI repair items', $wiql_StaleLSIrepairWorkItems, $wiql_approachSLA_StaleLSIrepair, 0)
+    # 'Stale DTSs'               = [ScoreCardQuery]::new('Stale DTSs', $wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0) 
+    # 'Active P0 bugs'         = [ScoreCardQuery]::new('Active P0 bugs', $wiql_ActiveP0Bugs, $null, 0)
+    # 'Stale P1 Bugs'            = [ScoreCardQuery]::new('Stale P1 Bugs', $wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
+    # 'Bugs Per Engineer'      = [ScoreCardQuery]::new('Bugs Per Engineer', $wiql_BugsPerEngineer, $null, 5)
+    # 'Stale security items'     = [ScoreCardQuery]::new('Stale security items', $wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
+    'Staleaccessibilitybugs' = [ScoreCardQuery]::new('Stale accessibility bugs', $wiql_StaleAccessibilityBugs, $null, 0)
+    # 'Stale reliability items'  = [ScoreCardQuery]::new('Stale reliability items', $wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
 }
 
 
@@ -56,7 +56,7 @@ $teams = [ordered]@{
     # 'Search Core' = [TeamDetails]::new("Search core", 15, "AzureDevOps\VSTS\Modern Interactions and Search\Search Core")
     # 'ProTocol' = [TeamDetails]::new("ProToCol", 12, "AzureDevOps\VSTS\Modern Interactions\ProToCol")  
     # 'Boards'                                 = [TeamDetails]::new("Boards", 6, "AzureDevOps\VSTS\Apps\Boards")  
-    'PipelinesApplicationandWebPlatform' = [TeamDetails]::new("PipelinesApplicationandWebPlatform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
+    'PipelinesApplicationandWebPlatform' = [TeamDetails]::new("Pipelines Application and Web Platform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
     
 }
 
@@ -67,13 +67,13 @@ foreach ($teamName in $teams.Keys) {
     $areapath = $team.areapath
     # Write-Host "team $($areapath)     Head Count $($team.headCount)"
    
-    [TeamScoreCardOutput]$teamScoreOutput = [TeamScoreCardOutput]::new($teamName, $team)
+    [TeamScoreCardOutput]$teamScoreOutput = [TeamScoreCardOutput]::new($team)
 
     foreach ($scoreCardAttributes in $wiql_EngineeringScoreCard.Keys) { 
         $scoreCardAttr = $wiql_EngineeringScoreCard[$scoreCardAttributes]
         $finalQuery = [string]::Format($scoreCardAttr.wiqlQuery, $areapath)
         $witCount, $wits = GetWorkItems $organization $finalQuery
-        # Write-Host "output $($scoreCardAttributes)   $($witCount)       $($scoreCardAttr.threshold)"
+        Write-Host "output $($scoreCardAttributes)   $($witCount)       $($scoreCardAttr.threshold)"
 
         $scoreCardQueryUrl = $organization + "/" + $project + "/_queries/query?wiql=" + $(UrlEncode($finalQuery))
         
@@ -89,28 +89,30 @@ foreach ($teamName in $teams.Keys) {
             $approachSLA_wits = $null
             $approachQueryUrl = ""
         }
-        [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
+        [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($scoreCardAttr.name, $finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
         $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
         $queryOutput.setApproachQueryUrl($approachQueryUrl);
         $teamScoreOutput.AddScoreCardQueryOutput($scoreCardAttributes, $queryOutput)
     }
-    $areapath_engScoreCard.Add($teamName, $teamScoreOutput)
+    # remove team name hardcoded value to $teamName. this is added to make sure it works only for one team and key is constant
+    $areapath_engScoreCard.Add("teamscorecard", $teamScoreOutput)
 }
  
 
 $resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10 -Compress
 # $resultJson = $resultJson -replace '\\', '\'
-# $resultJson
+$resultJson
 
 $singleLineJson = $resultJson -split "(\r*\n){2,}"
 
 # remove linefeeds for each section and output the contents
 $singleLineJson = $singleLineJson -replace '\r*\n', ''
 # $singleLineJson = $singleLineJson -replace '\\\\', '\'
-$singleLineJson
+# $singleLineJson
 
 
 class ScoreCardQuery {
+    [string]$name
     [string]$wiqlQuery
     [string]$wiqlQueryApproachSLA
     [int]$threshold
@@ -118,10 +120,12 @@ class ScoreCardQuery {
     [string]$approachQueryUrl
  
     ScoreCardQuery(
+        [string]$name,
         [string]$wiqlQuery,
         [string]$wiqlQueryApproachSLA,
         [int]$threshold
     ) {
+        $this.name = $name
         $this.wiqlQuery = $wiqlQuery
         $this.wiqlQueryApproachSLA = $wiqlQueryApproachSLA
         $this.threshold = $threshold
@@ -140,7 +144,7 @@ class ScoreCardQueryOutput : ScoreCardQuery {
     [int]$count
     [int]$approachSLACount
  
-    ScoreCardQueryOutput([string]$wiqlQuery, [string]$wiqlQueryApproachSLA, [int]$threshold, [int]$count, [int]$approachSLACount) : base($wiqlQuery, $wiqlQueryApproachSLA, $threshold) {
+    ScoreCardQueryOutput([string]$name, [string]$wiqlQuery, [string]$wiqlQueryApproachSLA, [int]$threshold, [int]$count, [int]$approachSLACount) : base($name, $wiqlQuery, $wiqlQueryApproachSLA, $threshold) {
         $this.count = $count
         $this.approachSLACount = $approachSLACount
     }
@@ -163,16 +167,13 @@ class TeamDetails {
 }
 
 class TeamScoreCardOutput {
-    [string]$name
     [TeamDetails]$teamDetails
     $scoreCardOutputs = [ordered]@{ }
     #[ScoreCardQueryOutput]$scoreCardQueryOutput
     
     TeamScoreCardOutput(
-        [string]$name,
         [TeamDetails]$teamDetails
     ) {
-        $this.name = $name
         $this.teamDetails = $teamDetails
     }
 
