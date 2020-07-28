@@ -57,7 +57,7 @@ $teams = [ordered]@{
     # 'Search Core' = [TeamDetails]::new("Search core", 15, "AzureDevOps\VSTS\Modern Interactions and Search\Search Core")
     # 'ProTocol' = [TeamDetails]::new("ProToCol", 12, "AzureDevOps\VSTS\Modern Interactions\ProToCol")  
     # 'Boards'                                 = [TeamDetails]::new("Boards", 6, "AzureDevOps\VSTS\Apps\Boards")  
-    'PipelinesApplicationandWebPlatform' = [TeamDetails]::new("PipelinesApplicationandWebPlatform", "6", "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
+    'PipelinesApplicationandWebPlatform' = [TeamDetails]::new("PipelinesApplicationandWebPlatform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
     
 }
 
@@ -90,13 +90,12 @@ foreach ($teamName in $teams.Keys) {
             $approachSLA_wits = $null
             $approachQueryUrl = ""
         }
-        # [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
+        [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
         # remove this hack later and uncomment the above line
-        [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new("abcd", "xyz", $scoreCardAttr.threshold, $witCount, 0)
+        # [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new("abcd", "xyz", $scoreCardAttr.threshold, $witCount, 0)
         # $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
         # $queryOutput.setApproachQueryUrl($approachQueryUrl);
-        $team.areapath = ""; # remove this hack later
-        # $scoreCardAttr.
+        # $team.areapath = ""; # remove this hack later
         $teamScoreOutput.AddScoreCardQueryOutput($scoreCardAttributes, $queryOutput)
     }
     $areapath_engScoreCard.Add($teamName, $teamScoreOutput)
@@ -153,7 +152,7 @@ class ScoreCardQueryOutput : ScoreCardQuery {
 
 class TeamDetails {
     [string]$name
-    [string]$headCount
+    [int]$headCount
     [string]$areaPath
     
     TeamDetails(
