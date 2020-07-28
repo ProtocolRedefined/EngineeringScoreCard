@@ -18,7 +18,6 @@ jobs:
         shell: powershell
         run: |
           $result = &".\EngScoreCard.ps1"
-          echo "::set-output name=scorecard::$result"
         env:
           AZURE_DEVOPS_EXT_PAT: ${{ secrets.SNANKANI_PRIVATE_PAT }}
 
