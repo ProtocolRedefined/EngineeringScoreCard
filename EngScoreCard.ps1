@@ -117,6 +117,7 @@ $singleLineJson = $singleLineJson -replace '\\\\', '\'
 [string]$resultOutput = '{"openIssues":"abc"}';
 Write-Output -InputObject $resultOutput
 
+
 class ScoreCardQuery {
     [string]$wiqlQuery
     [string]$wiqlQueryApproachSLA
