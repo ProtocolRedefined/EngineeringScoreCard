@@ -99,7 +99,8 @@ foreach ($teamName in $teams.Keys) {
 
 
 $resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10 
-$resultJson = $resultJson -replace '"', "'"
+# $resultJson = $resultJson -replace '"', "'"
+$resultJson = $resultJson -replace '"', '\"'
 $resultJson
 
 class ScoreCardQuery {
