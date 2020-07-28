@@ -100,8 +100,14 @@ foreach ($teamName in $teams.Keys) {
 
 $resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10 
 # $resultJson = $resultJson -replace '"', "'"
-$resultJson = $resultJson -replace '"', '\"'
-$resultJson
+# $resultJson = $resultJson -replace '"', '\"'
+# $resultJson
+
+$singleLineJson = $resultJson -split "(\r*\n){2,}"
+
+# remove linefeeds for each section and output the contents
+$singleLineJson = $singleLineJson -replace '\r*\n', ''
+$singleLineJson
 
 class ScoreCardQuery {
     [string]$wiqlQuery
