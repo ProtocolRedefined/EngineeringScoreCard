@@ -112,7 +112,9 @@ $singleLineJson = $resultJson -split "(\r*\n){2,}"
 # remove linefeeds for each section and output the contents
 $singleLineJson = $singleLineJson -replace '\r*\n', ''
 $singleLineJson = $singleLineJson -replace '\\\\', '\'
-[string]$resultOutput = $singleLineJson
+# $singleLineJson
+
+[string]$resultOutput = '{"openIssues":1,"openIssuesUnassigned":1,"openIssuesLink":"https://github.com/ProtocolRedefined/Ecosystem/issues?state=open","openIssuesUnassignedLink":"https://github.com/ProtocolRedefined/Ecosystem/issues?q=is%3Aopen+no%3Aassignee"}';
 $resultOutput
 
 class ScoreCardQuery {
