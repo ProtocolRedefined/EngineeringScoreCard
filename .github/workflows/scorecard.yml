@@ -29,7 +29,7 @@ jobs:
           echo '${{ steps.psscript.outputs.scorecard}}'
 
       - name: Push Notification
-        uses: ProtocolRedefined/Ecosystem@v1
+        uses: ProtocolRedefined/Ecosystem@master
         with:
           repoName: ProtocolRedefined/Ecosystem-Template-Repository
           data: '{ "message" : ${{ steps.psscript.outputs.scorecard }} }'
