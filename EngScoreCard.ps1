@@ -9,6 +9,7 @@ $project = "AzureDevOps"
 
 
 function UrlEncode ([string]$witQuery) {
+    # Write-Host "witQuery : $($witQuery)"
     [string]$encodedUrl = [System.Web.HttpUtility]::UrlEncode($witQuery, [System.Text.Encoding]::UTF8)
     # Write-Host "encoded url : $($encodedurl)"
     return $encodedUrl
@@ -20,6 +21,7 @@ function AppendTrackingDataEngineeringScoreCard([string]$url) {
 }
 
 function GetWorkItems ([string]$org, [string]$wiqlQuery) {
+    # Write-Host "witQuery : $($wiqlQuery)"
     $workItems = az boards query --org $org --wiql $wiqlQuery -o json | ConvertFrom-Json
     return $workItems.Count, $workItems
 }
@@ -29,7 +31,7 @@ $wiql_StaleLSIrepairWorkItems = "SELECT [System.Id],[System.WorkItemType],[Syste
 $wiql_StaleDTSs = "SELECT [System.Id], [System.WorkItemType], [System.Title], [System.State], [System.AssignedTo], [System.CreatedDate], [Microsoft.VSTS.Common.Priority], [System.AreaPath] FROM WorkItems WHERE [System.WorkItemType] = 'DTS Task' and [System.State] = '5 - PG Engaged' and [Custom.Whogottheball] = 'Product Group' and ((([Microsoft.VSTS.Common.Priority] = 0 or [Microsoft.VSTS.Common.Priority] = 1) and [System.CreatedDate] <= @Today - 3) or ([Microsoft.VSTS.Common.Priority] = 2 and [System.CreatedDate] <= @Today - 7) or ([Microsoft.VSTS.Common.Priority] = 3 and [System.CreatedDate] <= @Today - 14) or ([Microsoft.VSTS.Common.Priority] = 4 and [System.CreatedDate] <= @Today - 21)) AND  ([System.AreaPath] UNDER  '{0}')"
 $wiql_ActiveP0Bugs = "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.State],[System.AssignedTo],[System.CreatedDate],[Microsoft.VSTS.Common.Priority],[System.AreaPath] FROM WorkItems WHERE [System.WorkItemType] = 'Bug' AND [System.State] = 'Active' AND [Microsoft.DevDiv.IssueType] <> 'Localization' AND [Microsoft.DevDiv.IssueType] <> 'tracking' AND [Microsoft.VSTS.Common.Priority] = 0 AND [System.AreaPath] UNDER '{0}'"
 $wiql_StaleP1Bugs = "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.State],[System.AssignedTo],[System.CreatedDate],[Microsoft.VSTS.Common.Priority],[System.AreaPath] FROM WorkItems WHERE [System.WorkItemType] = 'Bug' AND [System.State] = 'Active' AND [Microsoft.DevDiv.IssueType] <> 'Localization' AND [Microsoft.DevDiv.IssueType] <> 'tracking' AND [Microsoft.VSTS.Common.Priority] = 1 AND [System.CreatedDate] <= @today - 21 AND [System.AreaPath] UNDER '{0}'"
-$wiql_BugsPerEngineer = "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.State],[System.AssignedTo],[System.CreatedDate],[Microsoft.VSTS.Common.Priority],[System.AreaPath] FROM WorkItems WHERE [System.WorkItemType] = 'Bug' AND [System.State] = 'Active' AND [Microsoft.DevDiv.IssueType] <> 'Localization' AND [Microsoft.VSTS.Common.IsA11yBug] = 'No' AND [Microsoft.DevDiv.IssueType] <> 'tracking' AND [System.AreaPath] UNDER '{0}'"
+$wiql_BugsPerEngineer = "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.State],[System.AssignedTo],[System.CreatedDate],[Microsoft.VSTS.Common.Priority],[System.AreaPath]  FROM WorkItems WHERE [System.WorkItemType] = 'Bug' and [System.State] = 'Active' and [Microsoft.DevDiv.IssueType] <> 'Localization' and [Microsoft.VSTS.Common.IsA11yBug] <> 'Yes' and [Microsoft.DevDiv.IssueType] <> 'tracking' AND  ([System.AreaPath] UNDER  '{0}')"
 $wiql_StaleSecurityWorkItems = "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.State],[System.AssignedTo],[System.CreatedDate],[Microsoft.VSTS.Common.Priority],[System.AreaPath] FROM WorkItems WHERE ( [System.WorkItemType] <> 'Live Site Incident' AND [System.WorkItemType] <> 'Live Site Knowledge Base' AND [System.WorkItemType] <> 'Live Site Problem' AND [System.WorkItemType] <> 'Live Site Change Request' ) AND ( [System.State] = 'Active' OR [System.State] = 'In Progress' OR [System.State] = 'Proposed' OR [System.State] = 'Committed' ) AND ( [Microsoft.DevDiv.TenetAffected] = 'Trustworthy and Secure' OR ( [System.Tags] CONTAINS 'Security' OR [System.Tags] CONTAINS 'VSORedBlue' OR [System.Tags] CONTAINS 'VSTSRedBlue' OR [System.Tags] CONTAINS 'PenTest' OR [System.Tags] CONTAINS 'VSOSIM' OR [System.Tags] CONTAINS 'Threat Model' )) AND [System.Tags] NOT CONTAINS '1CS' AND [Microsoft.DevDiv.IssueType] <> 'tracking' AND [System.CreatedDate] <= @today - 21 AND [System.AreaPath] UNDER '{0}'"
 $wiql_StaleAccessibilityBugs = "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.State],[System.AssignedTo],[System.CreatedDate],[Microsoft.VSTS.Common.Priority],[System.AreaPath] FROM WorkItems WHERE [System.WorkItemType] = 'Bug' AND [System.State] = 'Active' AND ( [Microsoft.VSTS.Common.IsA11yBug] = 'Yes' OR [System.Tags] CONTAINS 'A11yMAS' ) AND [System.Tags] NOT CONTAINS 'A11yPlan' AND [System.CreatedDate] <= @today - 42 AND [System.AreaPath] UNDER '{0}'"
 $wiql_StaleReliabilityBugs = "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.State],[System.AssignedTo],[System.CreatedDate],[Microsoft.VSTS.Common.Priority],[System.AreaPath] FROM WorkItems WHERE [System.WorkItemType] = 'Bug' AND [System.State] = 'Active' AND [System.Tags] CONTAINS 'CI_Reliability' AND [System.CreatedDate] <= @today - 21 AND [System.AreaPath] UNDER '{0}'"
@@ -44,14 +46,14 @@ $wiql_approachSLA_StaleReliability = "SELECT [System.Id],[System.WorkItemType],[
 
 
 $wiql_EngineeringScoreCard = [ordered]@{
-    'Staleaccessibilitybugs'  = [ScoreCardQuery]::new('Stale accessibility bugs', $wiql_StaleAccessibilityBugs, $null, 0)
-    'Stale LSI repair items'  = [ScoreCardQuery]::new('Stale LSI repair items', $wiql_StaleLSIrepairWorkItems, $wiql_approachSLA_StaleLSIrepair, 0)
-    'Stale DTSs'              = [ScoreCardQuery]::new('Stale DTSs', $wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0) 
-    'Active P0 bugs'          = [ScoreCardQuery]::new('Active P0 bugs', $wiql_ActiveP0Bugs, $null, 0)
-    'Stale P1 Bugs'           = [ScoreCardQuery]::new('Stale P1 Bugs', $wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
-    'Bugs Per Engineer'       = [ScoreCardQuery]::new('Bugs Per Engineer', $wiql_BugsPerEngineer, $null, 5)
-    'Stale security items'    = [ScoreCardQuery]::new('Stale security items', $wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
-    'Stale reliability items' = [ScoreCardQuery]::new('Stale reliability items', $wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
+    'StaleAccessibilityBugs'  = [ScoreCardQuery]::new('Stale accessibility bugs', $wiql_StaleAccessibilityBugs, $null, 0)
+    'StaleLsiRepairItems'  = [ScoreCardQuery]::new('Stale LSI repair items', $wiql_StaleLSIrepairWorkItems, $wiql_approachSLA_StaleLSIrepair, 0)
+    'StaleDTSs'              = [ScoreCardQuery]::new('Stale DTSs', $wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0) 
+    'ActiveP0Bugs'          = [ScoreCardQuery]::new('Active P0 bugs', $wiql_ActiveP0Bugs, $null, 0)
+    'StaleP1Bugs'           = [ScoreCardQuery]::new('Stale P1 Bugs', $wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
+    'BugsPerEngineer'       = [ScoreCardQuery]::new('Bugs Per Engineer', $wiql_BugsPerEngineer, $null, 5)
+    'StaleSecurityItems'    = [ScoreCardQuery]::new('Stale security items', $wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
+    'StaleReliabilityItems' = [ScoreCardQuery]::new('Stale reliability items', $wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
 }
 
 
@@ -70,7 +72,7 @@ $areapath_engScoreCard = New-Object 'system.collections.generic.dictionary[[stri
 foreach ($teamName in $teams.Keys) {
     $team = $teams[$teamName]
     $areapath = $team.areapath
-    # Write-Host "team $($areapath)     Head Count $($team.headCount)"
+    Write-Host "team$($teamName)  areaPath $($areapath)     Head Count $($team.headCount)"
    
     [TeamScoreCardOutput]$teamScoreOutput = [TeamScoreCardOutput]::new($team)
 
@@ -94,6 +96,12 @@ foreach ($teamName in $teams.Keys) {
             $approachSLA_wits = $null
             $approachQueryUrl = ""
         }
+
+        if($scoreCardAttributes -eq "BugsPerEngineer") {
+            Write-Output "hi"
+            $witCount = $witCount/$headCount
+        }
+
         [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($scoreCardAttr.name, $finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
         $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
         $queryOutput.setApproachQueryUrl($approachQueryUrl);
