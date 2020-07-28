@@ -112,10 +112,7 @@ $singleLineJson = $resultJson -split "(\r*\n){2,}"
 # remove linefeeds for each section and output the contents
 $singleLineJson = $singleLineJson -replace '\r*\n', ''
 $singleLineJson = $singleLineJson -replace '\\\\', '\'
-# $singleLineJson
-
-[string]$resultOutput = '{"openIssues":"abc"}';
-Write-Output -InputObject $resultOutput
+$singleLineJson
 
 
 class ScoreCardQuery {
