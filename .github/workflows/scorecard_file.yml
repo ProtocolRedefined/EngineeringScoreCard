@@ -26,9 +26,7 @@ jobs:
         id: checkoutput
         shell: powershell
         run: |
-          echo $scorecard
-        env:
-          scorecard: ${{ steps.psscript.outputs.scorecard}}
+          echo "${{ steps.psscript.outputs.scorecard}}"
 
       - name: Push Notification
         uses: ProtocolRedefined/Ecosystem@v1
