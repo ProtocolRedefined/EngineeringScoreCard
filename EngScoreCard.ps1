@@ -46,7 +46,7 @@ $wiql_EngineeringScoreCard = [ordered]@{
     # 'Stale P1 Bugs'            = [ScoreCardQuery]::new($wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
     # 'Bugs Per Engineer'      = [ScoreCardQuery]::new($wiql_BugsPerEngineer, $null, 5)
     # 'Stale security items'     = [ScoreCardQuery]::new($wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
-    # 'Stale accessibility bugs' = [ScoreCardQuery]::new($wiql_StaleAccessibilityBugs, $null, 0)
+    # 'Staleaccessibilitybugs' = [ScoreCardQuery]::new($wiql_StaleAccessibilityBugs, $null, 0)
     # 'Stale reliability items'  = [ScoreCardQuery]::new($wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
 }
 
@@ -57,7 +57,7 @@ $teams = [ordered]@{
     # 'Search Core' = [TeamDetails]::new("Search core", 15, "AzureDevOps\VSTS\Modern Interactions and Search\Search Core")
     # 'ProTocol' = [TeamDetails]::new("ProToCol", 12, "AzureDevOps\VSTS\Modern Interactions\ProToCol")  
     # 'Boards'                                 = [TeamDetails]::new("Boards", 6, "AzureDevOps\VSTS\Apps\Boards")  
-    'Pipelines Application and Web Platform' = [TeamDetails]::new("Pipelines Application and Web Platform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
+    'Pipelines Application and Web Platform' = [TeamDetails]::new("PipelinesApplicationandWebPlatform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
     
 }
 
