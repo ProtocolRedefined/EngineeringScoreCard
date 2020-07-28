@@ -20,7 +20,7 @@ function AppendTrackingDataEngineeringScoreCard([string]$url) {
 }
 
 function GetWorkItems ([string]$org, [string]$wiqlQuery) {
-    $workItems = az.cmd boards query --org $org --wiql $wiqlQuery -o json | ConvertFrom-Json
+    $workItems = az boards query --org $org --wiql $wiqlQuery -o json | ConvertFrom-Json
     return $workItems.Count, $workItems
 }
 
