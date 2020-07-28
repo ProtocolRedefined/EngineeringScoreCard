@@ -67,6 +67,7 @@ foreach ($teamName in $teams.Keys) {
     $team = $teams[$teamName]
     $areapath = $team.areapath
     # Write-Host "team $($areapath)     Head Count $($team.headCount)"
+    $team.areapath = ""; # remove this hack later
     [TeamScoreCardOutput]$teamScoreOutput = [TeamScoreCardOutput]::new($teamName, $team)
 
     foreach ($scoreCardAttributes in $wiql_EngineeringScoreCard.Keys) { 
