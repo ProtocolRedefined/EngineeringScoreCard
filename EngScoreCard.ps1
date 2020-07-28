@@ -114,8 +114,8 @@ $singleLineJson = $singleLineJson -replace '\r*\n', ''
 $singleLineJson = $singleLineJson -replace '\\\\', '\'
 # $singleLineJson
 
-[string]$resultOutput = '{"openIssues":1,"openIssuesUnassigned":1,"openIssuesLink":"https://github.com/ProtocolRedefined/Ecosystem/issues?state=open","openIssuesUnassignedLink":"https://github.com/ProtocolRedefined/Ecosystem/issues?q=is%3Aopen+no%3Aassignee"}';
-$resultOutput
+[string]$resultOutput = '{"openIssues":"abc"}';
+Write-Output -InputObject $resultOutput
 
 class ScoreCardQuery {
     [string]$wiqlQuery
