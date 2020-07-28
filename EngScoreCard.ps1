@@ -103,7 +103,7 @@ foreach ($teamName in $teams.Keys) {
 }
 
 
-$resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10
+$resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10 -Compress
 # $resultJson = $resultJson -replace '\\', '\'
 # $resultJson
 
