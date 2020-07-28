@@ -34,5 +34,5 @@ jobs:
           repoName: ProtocolRedefined/Ecosystem-Template-Repository
           data: '{ "message" : "${{ steps.psscript.outputs.scorecard }}" }'
           templateType: HandleBars
-          sourceType: eng_scorecard
+          sourceType: ScoreCard
           ClientType: Teams
