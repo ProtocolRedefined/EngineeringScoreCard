@@ -4,7 +4,6 @@ $project = "AzureDevOps"
 
 
 function UrlEncode ([string]$witQuery) {
-    # Write-Host "witQuery : $($witQuery)"
     [string]$encodedUrl = [System.Web.HttpUtility]::UrlEncode($witQuery, [System.Text.Encoding]::UTF8)
     # Write-Host "encoded url : $($encodedurl)"
     return $encodedUrl
@@ -67,7 +66,7 @@ foreach ($teamName in $teams.Keys) {
     $team = $teams[$teamName]
     $areapath = $team.areapath
     # Write-Host "team $($areapath)     Head Count $($team.headCount)"
-    $team.areapath = ""; # remove this hack later
+   
     [TeamScoreCardOutput]$teamScoreOutput = [TeamScoreCardOutput]::new($teamName, $team)
 
     foreach ($scoreCardAttributes in $wiql_EngineeringScoreCard.Keys) { 
@@ -91,11 +90,8 @@ foreach ($teamName in $teams.Keys) {
             $approachQueryUrl = ""
         }
         [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
-        # remove this hack later and uncomment the above line
-        # [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new("abcd", "xyz", $scoreCardAttr.threshold, $witCount, 0)
-        # $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
-        # $queryOutput.setApproachQueryUrl($approachQueryUrl);
-        # $team.areapath = ""; # remove this hack later
+        $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
+        $queryOutput.setApproachQueryUrl($approachQueryUrl);
         $teamScoreOutput.AddScoreCardQueryOutput($scoreCardAttributes, $queryOutput)
     }
     $areapath_engScoreCard.Add($teamName, $teamScoreOutput)
