@@ -32,8 +32,7 @@ jobs:
         uses: ProtocolRedefined/Ecosystem@v1
         with:
           repoName: ProtocolRedefined/Ecosystem-Template-Repository
-          branchName: showcase
-          data: '{ "${{ steps.psscript.outputs.scorecard }}" }'
+          data: '{ "message" : "${{ steps.psscript.outputs.scorecard }}" }'
           templateType: HandleBars
           sourceType: PublishReport
           ClientType: Teams
