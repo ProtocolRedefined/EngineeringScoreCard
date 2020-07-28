@@ -57,7 +57,7 @@ $teams = [ordered]@{
     # 'Search Core' = [TeamDetails]::new("Search core", 15, "AzureDevOps\VSTS\Modern Interactions and Search\Search Core")
     # 'ProTocol' = [TeamDetails]::new("ProToCol", 12, "AzureDevOps\VSTS\Modern Interactions\ProToCol")  
     # 'Boards'                                 = [TeamDetails]::new("Boards", 6, "AzureDevOps\VSTS\Apps\Boards")  
-    'Pipelines Application and Web Platform' = [TeamDetails]::new("PipelinesApplicationandWebPlatform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
+    'PipelinesApplicationandWebPlatform' = [TeamDetails]::new("PipelinesApplicationandWebPlatform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
     
 }
 
