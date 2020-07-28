@@ -46,7 +46,7 @@ $wiql_EngineeringScoreCard = [ordered]@{
     # 'Stale P1 Bugs'            = [ScoreCardQuery]::new($wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
     # 'Bugs Per Engineer'      = [ScoreCardQuery]::new($wiql_BugsPerEngineer, $null, 5)
     # 'Stale security items'     = [ScoreCardQuery]::new($wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
-    'Stale accessibility bugs' = [ScoreCardQuery]::new($wiql_StaleAccessibilityBugs, $null, 0)
+    # 'Stale accessibility bugs' = [ScoreCardQuery]::new($wiql_StaleAccessibilityBugs, $null, 0)
     # 'Stale reliability items'  = [ScoreCardQuery]::new($wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
 }
 
