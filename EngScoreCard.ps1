@@ -89,9 +89,13 @@ foreach ($teamName in $teams.Keys) {
             $approachSLA_wits = $null
             $approachQueryUrl = ""
         }
-        [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
-        $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
-        $queryOutput.setApproachQueryUrl($approachQueryUrl);
+        # [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new($finalQuery, $approachSLA_finalQuery, $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
+        # remove this hack later and uncomment the above line
+        [ScoreCardQueryOutput]$queryOutput = [ScoreCardQueryOutput]::new("", "", $scoreCardAttr.threshold, $witCount, $($approachSLA_witCount - $witCount))
+        # $queryOutput.setScoreCardQueryUrl($scoreCardQueryUrl);
+        # $queryOutput.setApproachQueryUrl($approachQueryUrl);
+        $team.areapath = ""; # remove this hack later
+        # $scoreCardAttr.
         $teamScoreOutput.AddScoreCardQueryOutput($scoreCardAttributes, $queryOutput)
     }
     $areapath_engScoreCard.Add($teamName, $teamScoreOutput)
