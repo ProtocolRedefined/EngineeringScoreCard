@@ -188,3 +188,4 @@ class TeamScoreCardOutput {
         $this.scoreCardOutputs[$name] = $queryOutput
     }
 }
+
