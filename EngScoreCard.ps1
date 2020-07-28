@@ -1,3 +1,8 @@
+param(
+    [String]$teamName = "Pipelines Application and Web Platform",
+    [int]$headCount = 11,
+    [String]$areaPath = "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform"
+)
 
 $organization = "https://dev.azure.com/mseng"
 $project = "AzureDevOps"
@@ -39,14 +44,14 @@ $wiql_approachSLA_StaleReliability = "SELECT [System.Id],[System.WorkItemType],[
 
 
 $wiql_EngineeringScoreCard = [ordered]@{
-    # 'Stale LSI repair items' = [ScoreCardQuery]::new('Stale LSI repair items', $wiql_StaleLSIrepairWorkItems, $wiql_approachSLA_StaleLSIrepair, 0)
-    # 'Stale DTSs'               = [ScoreCardQuery]::new('Stale DTSs', $wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0) 
-    # 'Active P0 bugs'         = [ScoreCardQuery]::new('Active P0 bugs', $wiql_ActiveP0Bugs, $null, 0)
-    # 'Stale P1 Bugs'            = [ScoreCardQuery]::new('Stale P1 Bugs', $wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
-    # 'Bugs Per Engineer'      = [ScoreCardQuery]::new('Bugs Per Engineer', $wiql_BugsPerEngineer, $null, 5)
-    # 'Stale security items'     = [ScoreCardQuery]::new('Stale security items', $wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
-    'Staleaccessibilitybugs' = [ScoreCardQuery]::new('Stale accessibility bugs', $wiql_StaleAccessibilityBugs, $null, 0)
-    # 'Stale reliability items'  = [ScoreCardQuery]::new('Stale reliability items', $wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
+    'Stale LSI repair items'  = [ScoreCardQuery]::new('Stale LSI repair items', $wiql_StaleLSIrepairWorkItems, $wiql_approachSLA_StaleLSIrepair, 0)
+    'Stale DTSs'              = [ScoreCardQuery]::new('Stale DTSs', $wiql_StaleDTSs, $wiql_approachSLA_StaleDTSs, 0) 
+    'Active P0 bugs'          = [ScoreCardQuery]::new('Active P0 bugs', $wiql_ActiveP0Bugs, $null, 0)
+    'Stale P1 Bugs'           = [ScoreCardQuery]::new('Stale P1 Bugs', $wiql_StaleP1Bugs, $wiql_approachSLA_StaleP1Bugs, 0)
+    'Bugs Per Engineer'       = [ScoreCardQuery]::new('Bugs Per Engineer', $wiql_BugsPerEngineer, $null, 5)
+    'Stale security items'    = [ScoreCardQuery]::new('Stale security items', $wiql_StaleSecurityWorkItems, $wiql_approachSLA_StaleSecurity, 5)
+    'Staleaccessibilitybugs'  = [ScoreCardQuery]::new('Stale accessibility bugs', $wiql_StaleAccessibilityBugs, $null, 0)
+    'Stale reliability items' = [ScoreCardQuery]::new('Stale reliability items', $wiql_StaleReliabilityBugs, $wiql_approachSLA_StaleReliability, 0)  
 }
 
 
@@ -56,7 +61,7 @@ $teams = [ordered]@{
     # 'Search Core' = [TeamDetails]::new("Search core", 15, "AzureDevOps\VSTS\Modern Interactions and Search\Search Core")
     # 'ProTocol' = [TeamDetails]::new("ProToCol", 12, "AzureDevOps\VSTS\Modern Interactions\ProToCol")  
     # 'Boards'                                 = [TeamDetails]::new("Boards", 6, "AzureDevOps\VSTS\Apps\Boards")  
-    'PipelinesApplicationandWebPlatform' = [TeamDetails]::new("Pipelines Application and Web Platform", 6, "AzureDevOps\VSTS\Apps\Pipelines Application and Web Platform")  
+    'team' = [TeamDetails]::new($teamName, $headCount, $areaPath)  
     
 }
 
@@ -103,10 +108,10 @@ $resultJson = ConvertTo-Json -InputObject $areapath_engScoreCard -Depth 10 -Comp
 # $resultJson = $resultJson -replace '\\', '\'
 $resultJson
 
-$singleLineJson = $resultJson -split "(\r*\n){2,}"
+# $singleLineJson = $resultJson -split "(\r*\n){2,}"
 
 # remove linefeeds for each section and output the contents
-$singleLineJson = $singleLineJson -replace '\r*\n', ''
+# $singleLineJson = $singleLineJson -replace '\r*\n', ''
 # $singleLineJson = $singleLineJson -replace '\\\\', '\'
 # $singleLineJson
 
