@@ -32,7 +32,7 @@ jobs:
         uses: ProtocolRedefined/Ecosystem@master
         with:
           repoName: ProtocolRedefined/Ecosystem-Template-Repository
-          data: ${{ steps.psscript.outputs.scorecard }}
+          data: ${{ fromJson(steps.psscript.outputs.scorecard) }}
           templateType: HandleBars
           sourceType: ScoreCard
           ClientType: Teams
