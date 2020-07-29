@@ -98,7 +98,7 @@ foreach ($teamName in $teams.Keys) {
         }
 
         if($scoreCardAttributes -eq "BugsPerEngineer") {
-            Write-Output "hi"
+            # Write-Output "hi"
             $witCount = $witCount/$headCount
         }
 
