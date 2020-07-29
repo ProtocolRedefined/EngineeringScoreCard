@@ -161,7 +161,7 @@ class ScoreCardQueryOutput : ScoreCardQuery {
     ScoreCardQueryOutput([string]$name, [string]$wiqlQuery, [string]$wiqlQueryApproachSLA, [int]$threshold, [int]$count, [int]$approachSLACount) : base($name, $wiqlQuery, $wiqlQueryApproachSLA, $threshold) {
         $this.count = $count
         $this.approachSLACount = $approachSLACount
-        $this.needsAttention = ($this.count -gt $this.$threshold)
+        $this.needsAttention = ($this.count -gt $this.threshold)
     }
 }
 
