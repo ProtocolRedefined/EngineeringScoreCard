@@ -156,10 +156,12 @@ class ScoreCardQuery {
 class ScoreCardQueryOutput : ScoreCardQuery {
     [int]$count
     [int]$approachSLACount
+    [bool]$needsAttention
  
     ScoreCardQueryOutput([string]$name, [string]$wiqlQuery, [string]$wiqlQueryApproachSLA, [int]$threshold, [int]$count, [int]$approachSLACount) : base($name, $wiqlQuery, $wiqlQueryApproachSLA, $threshold) {
         $this.count = $count
         $this.approachSLACount = $approachSLACount
+        $this.$needsAttention = ($this.count -gt $this.$threshold)
     }
 }
 
