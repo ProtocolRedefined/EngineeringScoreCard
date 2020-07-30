@@ -36,6 +36,7 @@ jobs:
         uses: ProtocolRedefined/Dynamic-Template-Engine@master
         with:
           repoName: ProtocolRedefined/Ecosystem-Template-Repository
+          branchName: master
           data: '{ "message" : ${{ steps.psscript.outputs.scorecard }} }'
           templateType: HandleBars
           sourceType: ScoreCard
