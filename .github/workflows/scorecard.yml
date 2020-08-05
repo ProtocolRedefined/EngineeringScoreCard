@@ -1,6 +1,6 @@
 on:
-  schedule:
-    - cron: "0 14 * * *"
+  #schedule:
+  #  - cron: "0 14 * * *"
   repository_dispatch:
     types: [scorecard]
 
