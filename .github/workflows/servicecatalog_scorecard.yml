@@ -16,4 +16,4 @@ jobs:
     steps:
       - name: fetch scorecard
         id: issues
-        run: echo ::set-output name=SCORECARD::$(curl -sb -D- -u ${{secrets.ACCESS_TOKEN}} -X POST  -H "Content-Type:application/json" -d '{"query":"query { service("name":"cat") { maintainer { name }}}"}' https://catalog-staging.githubapp.com/graphql)
+        run: echo ::set-output name=SCORECARD::$(curl -X POST  -H "Content-Type:application/json" -H "Authorization:${{secrets.ACCESS_TOKEN}}" -d '{"query":"query { service("name":"cat") { maintainer { name }}}"}' https://catalog-staging.githubapp.com/graphql)
