@@ -1,6 +1,6 @@
 on:
-  schedule:
-    - cron: "* * * * *"
+  #schedule:
+   # - cron: "* * * * *"
   repository_dispatch:
     types: [servicecatalogscorecard]
 
